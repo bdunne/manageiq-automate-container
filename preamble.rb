@@ -12,7 +12,7 @@ begin
   require 'drb'
   # require 'yaml'
 
-  Time.zone = 'UTC'
+  # Time.zone = 'UTC'
 
   MIQ_OK    = 0
   MIQ_WARN  = 4
@@ -23,8 +23,11 @@ begin
   DRbObject.send(:undef_method, :inspect)
   DRbObject.send(:undef_method, :id) if DRbObject.respond_to?(:id)
 
+
+require 'pry-remote'
+binding.remote_pry
   DRb.start_service
-  $evmdrb = DRbObject.new_with_uri("/drb_socket")
+  $evmdrb = DRbObject.new_with_uri("drbunix:/tmp/manageiq-automate.sock")
   raise AutomateMethodException,"Cannot create DRbObject for unix socket" if $evmdrb.nil?
   $evm = $evmdrb.find(ENV["MIQ_ID"])
   raise AutomateMethodException,"Cannot find Service" if $evm.nil?

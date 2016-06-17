@@ -21,4 +21,6 @@ RUN yum -y install --setopt=tsflags=nodocs bzip2 make &&\
     yum clean all
 
 ENV PATH $PATH:/opt/rubies/ruby-2.2.5/bin
+RUN gem install pry-remote
+
 ADD preamble.rb /
