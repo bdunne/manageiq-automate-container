@@ -23,11 +23,9 @@ begin
   DRbObject.send(:undef_method, :inspect)
   DRbObject.send(:undef_method, :id) if DRbObject.respond_to?(:id)
 
-
-require 'pry-remote'
-binding.remote_pry
+  socket_file = ENV["MIQ_DRB_SOCKET"]
   DRb.start_service
-  $evmdrb = DRbObject.new_with_uri("drbunix:/tmp/manageiq-automate.sock")
+  $evmdrb = DRbObject.new_with_uri("drbunix:#{socket_file}")
   raise AutomateMethodException,"Cannot create DRbObject for unix socket" if $evmdrb.nil?
   $evm = $evmdrb.find(ENV["MIQ_ID"])
   raise AutomateMethodException,"Cannot find Service" if $evm.nil?
@@ -51,7 +49,9 @@ end
 
 begin
 
-File.write("/output", $evm.inspect)
+# Replace with user code
+require 'pry-remote'
+binding.remote_pry
 
 rescue Exception => err
   unless err.kind_of?(SystemExit)
