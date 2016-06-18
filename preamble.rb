@@ -37,6 +37,7 @@ rescue Exception => err
   raise
 end
 
+
 class Exception
   def backtrace_with_evm
     value = backtrace_without_evm
@@ -62,4 +63,7 @@ rescue Exception => err
   raise
 ensure
   $evm.disconnect_sql
+  $evm.stdin_write.close
+  $evm.stdout_write.close
+  $evm.stderr_write.close
 end
